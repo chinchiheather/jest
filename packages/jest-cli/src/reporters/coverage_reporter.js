@@ -21,7 +21,7 @@ import type {Context} from 'types/Context';
 import type {Test} from 'types/TestRunner';
 
 import {clearLine, isInteractive} from 'jest-util';
-import {createReporter} from 'istanbul-api';
+import {createReporter, config as istanbulConfig} from 'istanbul-api';
 import chalk from 'chalk';
 import istanbulCoverage from 'istanbul-lib-coverage';
 import libSourceMaps from 'istanbul-lib-source-maps';
@@ -87,7 +87,10 @@ export default class CoverageReporter extends BaseReporter {
       this._coverageMap,
     );
 
-    const reporter = createReporter();
+    const config = istanbulConfig.loadFile(false, {
+      reporting: {summarizer: 'nested'},
+    });
+    const reporter = createReporter(config);
     try {
       if (this._globalConfig.coverageDirectory) {
         reporter.dir = this._globalConfig.coverageDirectory;
